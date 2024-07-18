@@ -1,34 +1,51 @@
 package com.example.fibonacci.config;
 
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
 
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.fibonacci")) // Paquete base donde se encuentran los controladores
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo());
-    }
+  @Value("${leonardo.openapi.dev-url}")
+  private String devUrl;
 
-    private springfox.documentation.service.ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Fibonacci API")
-                .description("API para generar series de Fibonacci basadas en semillas de tiempo")
-                .version("1.0.0")
-                .build();
-    }
+  @Value("${leonardo.openapi.prod-url}")
+  private String prodUrl;
+
+  @Bean
+  public OpenAPI myOpenAPI() {
+    Server devServer = new Server();
+    devServer.setUrl(devUrl);
+    devServer.setDescription("Server URL in Development environment");
+
+    Server prodServer = new Server();
+    prodServer.setUrl(prodUrl);
+    prodServer.setDescription("Server URL in Production environment");
+
+    Contact contact = new Contact();
+    contact.setEmail("leonardocastrillongiraldo@gmail.com");
+    contact.setName("Leonardo");
+    contact.setUrl("https://www.leonardo.com");
+
+    License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
+
+    Info info = new Info()
+        .title("Fibonacci Management API")
+        .version("1.0")
+        .contact(contact)
+        .description("This API exposes endpoints to manage Fibonacci numbers.")
+        .license(mitLicense);
+
+    return new OpenAPI().info(info).servers(List.of(devServer, prodServer));
+  }
 }

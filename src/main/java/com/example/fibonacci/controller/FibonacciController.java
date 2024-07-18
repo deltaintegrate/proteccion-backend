@@ -17,11 +17,19 @@ import com.example.fibonacci.dto.TimeRequest;
 import com.example.fibonacci.model.FibonacciResult;
 import com.example.fibonacci.repository.FibonacciRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Fibonacci", description = "Fibonacci management APIs")
 @RestController
 public class FibonacciController {
 	@Autowired
 	private FibonacciRepository fibonacciRepository;
 	
+	@Operation(
+		      summary = "Create a Fibonacci Series ",
+		      description = "Create a Fibonacci serie by his initial date and take the minutes integer to start",
+		      tags = { "Fibonacci", "post" })
 	@PostMapping("/fibonacci")
 	public List<Integer> getFibonacciSeries(@RequestBody TimeRequest timeRequest) {
 		 String timeString = timeRequest.getTime();
@@ -42,6 +50,12 @@ public class FibonacciController {
 	     
 	     return fibonacciSeries;
 	}
+	
+	
+	@Operation(
+		      summary = "Retrieve a list Fibonacci Series",
+		      description = "Get a FibonacciResult object by specifying its id. The response is a Fibonacci object with id, The serie, And his inciial Date number.",
+		      tags = { "Fibonacci", "get" })
 	
 	@GetMapping("/fibonacci")
     public List<FibonacciResult> getAllSeeds() {
