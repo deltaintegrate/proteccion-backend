@@ -56,7 +56,6 @@ public class FibonacciController {
 		      summary = "Retrieve a list Fibonacci Series",
 		      description = "Get a FibonacciResult object by specifying its id. The response is a Fibonacci object with id, The serie, And his inciial Date number.",
 		      tags = { "Fibonacci", "get" })
-	
 	@GetMapping("/fibonacci")
     public List<FibonacciResult> getAllSeeds() {
         return fibonacciRepository.findAll();
